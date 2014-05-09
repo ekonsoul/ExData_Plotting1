@@ -1,28 +1,37 @@
+## This script creates the plot3.png
 
-# Data <- read.table("household_power_consumption.txt", header = TRUE, sep = ";", 
-#           colClasses = c("character","character","numeric","numeric","numeric",
-#                          "numeric", "numeric","numeric","numeric"), na.strings = "?")
+## Read whole text file into a big Data table:
+Data <- read.table("household_power_consumption.txt", header = TRUE, sep = ";", 
+           colClasses = c("character","character","numeric","numeric","numeric",
+                          "numeric", "numeric","numeric","numeric"), na.strings = "?")
 
-png(file = "plot3.png",width = 480, height = 480) ## Open PNG device; create 'plot3.png' in my working directory
+## Open PNG device; create 'plot3.png' in my working directory
+png(file = "plot3.png",width = 480, height = 480) 
 
 library(data.table)
 
+## Convert to data.table
 DT <- data.table(Data)
 setkey(DT, Date)
 
+## Extract days of interest using Date as key
 DTofInt <- rbind(DT['1/2/2007'],DT['2/2/2007'])
 
-# Create Time Axis
+## Create Time Axis
 z2<-paste(DTofInt$Date,DTofInt$Time)
-# Read Time Strings in POSIXlt time format.
+
+## Read Time Strings in POSIXlt time format.
 Time <- strptime(z2, "%d/%m/%Y%H:%M:%S")
 
+## Create 3 plots in the same axis
 plot(Time, DTofInt$Sub_metering_1, type = "l", xlab = "", ylab = "Energy sub metering", ylim = c(0,38), col = "black")
 par(new = TRUE)
 plot(Time, DTofInt$Sub_metering_2, type = "l", xlab = "", ylab = "", ylim = c(0,38), col = "red")
 par(new = TRUE)
 plot(Time, DTofInt$Sub_metering_3, type = "l", xlab = "", ylab = "", ylim = c(0,38), col = "blue")
 
+## Annotate with legend
 legend("topright", lty = 1, col = c("black", "red", "blue"), legend = c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3" ))
 
-dev.off()  # Close Graphics Device
+## Close Graphics Device
+dev.off()  
